@@ -1,29 +1,82 @@
-<div style="text-align:center">
-  <h1>Welcome to {{ title }}!</h1>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-  />
+<div
+  [style.height]="selectedCity ? '' : '100%'"
+  class="d-flex align-items-center">
+  <div class="container-fluid">
+    <div>
+      <div class="pt-2 pb-2 text-nowrap scrollable navigation-buttons">
+        <button
+          type="button"
+          class="btn btn-outline-primary m-1"
+          @showState
+          *ngIf="isCollapsed"
+          (click)="isCollapsed = !isCollapsed">
+          Filters
+        </button>
+        <button
+          appScrollToCenter
+          type="button"
+          class="btn btn-outline-primary m-1"
+          [ngClass]="{'active': currentUrl === '/currentWeather'}"
+          *ngIf="selectedCity"
+          [@selectedState]="currentUrl === '/currentWeather' ? 'selected' : 'default'"
+          (click)="showCurrentWeather()">
+          Current weather
+        </button>
+        <button
+          appScrollToCenter
+          type="button"
+          class="btn btn-outline-primary m-1"
+          [ngClass]="{'active': currentUrl === '/fiveDayForecast'}"
+          *ngIf="selectedCity"
+          [@selectedState]="currentUrl === '/fiveDayForecast' ? 'selected' : 'default'"
+          (click)="show5dayForecast()">
+          5 day forecast
+        </button>
+      </div>
+      <div *ngIf="!isCollapsed" @showState>
+        <div class="input-group p-1 mx-auto">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Country</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placement="bottom"
+            (selectItem)="searchCitiesByCountry($event)"
+            [(ngModel)]="countryText"
+            [ngbTypeahead]="searchCountries"/>
+        </div>
+        <div class="input-group p-1 pb-2 mx-auto">
+          <div class="input-group-prepend">
+            <span class="input-group-text">City</span>
+          </div>
+          <input
+            #citySearch
+            type="text"
+            class="form-control"
+            placement="bottom"
+            (selectItem)="selectCity($event)"
+            [(ngModel)]="cityText"
+            [ngbTypeahead]="searchCities"/>
+        </div>
+      </div>
+      <hr class="m-1" *ngIf="selectedCity">
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+  <ng-template #dialog let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Hi there!</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); errorMessage = ''">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>{{errorMessage ? errorMessage : 'To improve search for a city, please, fill the country input!'}}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" ngbAutofocus class="btn btn-outline-dark" (click)="c('Save click'); errorMessage = ''">Close</button>
+    </div>
+  </ng-template>
+  <app-spinner></app-spinner>
 </div>
-
-<p>
-  This is an Angular app built with <a href="https://nx.dev/angular">Nx</a>.
-</p>
-<p>🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**</p>
-
-<h2>Quick Start & Documentation</h2>
-
-<ul>
-  <li>
-    <a href="https://nx.dev/angular/getting-started/what-is-nx"
-      >10-minute video showing all Nx features</a
-    >
-  </li>
-  <li>
-    <a href="https://nx.dev/angular/tutorial/01-create-application"
-      >Interactive tutorial</a
-    >
-  </li>
-</ul>
-
-<router-outlet></router-outlet>

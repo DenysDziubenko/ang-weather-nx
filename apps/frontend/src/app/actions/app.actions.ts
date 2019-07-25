@@ -1,0 +1,140 @@
+import {Action} from '@ngrx/store';
+import {
+  BoundingBox,
+  City,
+  Country,
+  CurrentWeather,
+  FiveDayWeather,
+  RectangleZoneWeather
+} from '../models/weather.models';
+
+export enum AppActionTypes {
+  SelectCityAction = '[SelectCity] Action',
+  SelectCountryAction = '[SelectCountry] Action',
+  AllCountriesAction = '[AllCountries] Action',
+  AllCountriesRequested = '[AllCountriesRequested] All Countries Requested',
+  CitiesByCountryRequested = '[CitiesByCountryRequested] Cities By Country Requested',
+  CurrentWeatherRequested = '[CurrentWeatherRequested] Current Weather Requested',
+  FiveDayWeatherRequested = '[FiveDayWeatherRequested] Five Day Weather Requested',
+  SearchCitiesRequested = '[SearchCitiesRequested] Search Cities Requested',
+  GotAnErrorDuringRequest = '[GotAnErrorDuringRequest] Got an error during request',
+  CitiesWeatherWithinRectangleZoneRequested = '[CitiesWeatherWithinRectangleZoneRequested] Cities Weather Within Rectangle Zone Requested',
+  CitiesWeatherWithinRectangleZone = '[CitiesWeatherWithinRectangleZone] Cities Weather Within Rectangle Zone',
+  CitiesAction = '[CitiesAction] Action',
+  CityNamesAction = '[CityNamesAction] Action',
+  CurrentWeatherAction = '[CurrentWeather] Action',
+  FiveDayWeatherAction = '[FiveDayWeather] Action'
+}
+
+export class SelectCity implements Action {
+  readonly type = AppActionTypes.SelectCityAction;
+
+  constructor(public payload: { city: City }) {
+  }
+}
+
+export class Cities implements Action {
+  readonly type = AppActionTypes.CitiesAction;
+
+  constructor(public payload: { cities: City[] }) {
+  }
+}
+
+export class CityNames implements Action {
+  readonly type = AppActionTypes.CityNamesAction;
+
+  constructor(public payload: { cityNames: string[] }) {
+  }
+}
+
+export class SelectCountry implements Action {
+  readonly type = AppActionTypes.SelectCountryAction;
+
+  constructor(public payload: { country: Country }) {
+  }
+}
+
+export class AllCountries implements Action {
+  readonly type = AppActionTypes.AllCountriesAction;
+
+  constructor(public payload: { countries: Country[] }) {
+  }
+}
+
+export class CitiesWeatherWithinRectangleZone implements Action {
+  readonly type = AppActionTypes.CitiesWeatherWithinRectangleZone;
+
+  constructor(public payload: { rectangleZoneWeather: RectangleZoneWeather }) {
+  }
+}
+
+export class AllCountriesRequested implements Action {
+  readonly type = AppActionTypes.AllCountriesRequested;
+}
+
+export class CitiesWeatherWithinRectangleZoneRequested implements Action {
+  readonly type = AppActionTypes.CitiesWeatherWithinRectangleZoneRequested;
+
+  constructor(public payload: { boundingBox: BoundingBox }) {
+  }
+}
+
+export class CitiesByCountryRequested implements Action {
+  readonly type = AppActionTypes.CitiesByCountryRequested;
+
+  constructor(public payload: { countryCode: string }) {
+  }
+}
+
+export class SearchCitiesRequested implements Action {
+  readonly type = AppActionTypes.SearchCitiesRequested;
+
+  constructor(public payload: { term: string }) {
+  }
+}
+
+export class CurrentWeatherRequested implements Action {
+  readonly type = AppActionTypes.CurrentWeatherRequested;
+}
+
+export class FiveDayWeatherRequested implements Action {
+  readonly type = AppActionTypes.FiveDayWeatherRequested;
+}
+
+export class GotAnErrorDuringRequest implements Action {
+  readonly type = AppActionTypes.GotAnErrorDuringRequest;
+
+  constructor(public payload: { error: any }) {
+  }
+}
+
+export class CurrentWeatherForecast implements Action {
+  readonly type = AppActionTypes.CurrentWeatherAction;
+
+  constructor(public payload: { currentWeather: CurrentWeather }) {
+  }
+}
+
+export class FiveDayWeatherForecast implements Action {
+  readonly type = AppActionTypes.FiveDayWeatherAction;
+
+  constructor(public payload: { fiveDayWeather: FiveDayWeather }) {
+  }
+}
+
+export type AppActions =
+  SelectCity |
+  SelectCountry |
+  AllCountries |
+  Cities |
+  CityNames |
+  CitiesWeatherWithinRectangleZone |
+  CurrentWeatherForecast |
+  FiveDayWeatherForecast |
+  AllCountriesRequested |
+  CitiesByCountryRequested |
+  CurrentWeatherRequested |
+  FiveDayWeatherRequested |
+  SearchCitiesRequested |
+  GotAnErrorDuringRequest |
+  CitiesWeatherWithinRectangleZoneRequested;

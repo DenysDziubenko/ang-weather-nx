@@ -1,1 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+}
+
+.current-weather {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .current-weather-map {
+    height: 200px;
+  }
+}
+
+.scrollable {
+  overflow-x: scroll;
+}
+
+@media(min-width: 40rem) {
+  .scrollable {
+    overflow-x: auto;
+  }
+  .current-weather {
+    flex-direction: row;
+
+    .current-weather-map {
+      height: 500px;
+      width: 50% !important;
+    }
+
+    .current-weather-table {
+      width: 50% !important;
+      padding-left: .5rem;
+    }
+  }
+  .input-group {
+    width: 50%;
+  }
+  .navigation-buttons{
+    display: flex;
+    justify-content: center;
+  }
+}

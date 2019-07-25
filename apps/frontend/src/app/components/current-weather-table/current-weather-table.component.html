@@ -1,0 +1,49 @@
+<div *ngIf="(currentWeather$ | async) as forecast" class="pt-2">
+  <div
+    class="alert"
+    [class.alert-primary]="forecast.main.temp <= 25"
+    [class.alert-danger]="forecast.main.temp > 25"
+    role="alert">
+    Currently in {{forecast.name + ', ' + forecast.sys.country}}
+    <img
+      height="35"
+      width="35"
+      alt=""
+      [src]="'http://openweathermap.org/img/w/'+ forecast.weather[0].icon + '.png' ">
+    <br>
+    {{forecast.weather[0].main }},
+    {{forecast.weather[0].description }}
+  </div>
+  <table class="table" >
+    <tbody>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Clouds, %</th>
+      <td>{{forecast.clouds.all}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Temp., °C</th>
+      <td>{{forecast.main.temp}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Pressure, hPa</th>
+      <td>{{forecast.main.pressure}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Humidity, %</th>
+      <td>{{forecast.main.humidity}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Wind speed, m/s</th>
+      <td>{{forecast.wind.speed}}, {{getTextWindDirection(forecast.wind.deg)}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Sunrise</th>
+      <td>{{forecast.sys.sunrise * 1000 | date:'shortTime'}}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-secondary font-weight-normal">Sunset</th>
+      <td>{{forecast.sys.sunset * 1000 | date:'shortTime'}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,8 @@
+<div @showState class="p-1 current-weather">
+  <div class="text-center w-100 pt-2 current-weather-map">
+    <div #gmap >
+      Please select some country and the city (or just city) to see forecast.
+    </div>
+  </div>
+  <app-current-weather-table [hidden]="!showCityTable" class="current-weather-table w-100"></app-current-weather-table>
+</div>

@@ -1,0 +1,82 @@
+<div
+  [ngClass]="isSmallMode ? 'table-responsive-sm' : 'table'"
+  class="p-1"
+  [@slideState]="isTableValueChanged ? 'slided' : 'default'">
+  <table
+    *ngIf="isSmallMode; else bigTable"
+    class="table table-sm small text-nowrap text-left">
+    <thead>
+    <tr>
+      <th scope="col">Clouds</th>
+      <th scope="col">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let period of periods">
+      <td>
+        <img
+          alt=""
+          height="35"
+          width="35"
+          [src]="'http://openweathermap.org/img/w/'+ period.weather[0].icon + '.png' ">
+        <div>{{period.clouds.all}}% at {{period.dt * 1000 | date : 'H:mm'}} hour</div>
+        <div *ngIf="period.rain && period.rain['3h']" class="font-weight-bold">Rain, {{period.rain["3h"].toFixed(2)}}mm
+          in 3 hour
+        </div>
+        <div *ngIf="period.snow && period.snow['3h']" class="font-weight-bold">Snow, {{period.snow["3h"].toFixed(2)}}mm
+          in 3 hour
+        </div>
+        <div>Wind {{period.wind.speed}} m/s, {{getTextWindDirection(period.wind.deg)}}</div>
+      </td>
+      <td>
+        <div>{{capitalizeFirstLetter(period.weather[0].description)}}</div>
+        <div>Temp. - <b>{{period.main.temp}} °C</b></div>
+        <div>Humidity - {{period.main.humidity}} %</div>
+        <div>Pressure - {{period.main.pressure}} hPa</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #bigTable>
+  <table class="table text-nowrap text-left app-five-day-forecast-table">
+    <thead>
+    <tr>
+      <th scope="col">Clouds</th>
+      <th scope="col">Temp,°C</th>
+      <th scope="col">Wind,m/s</th>
+      <th scope="col">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let period of periods">
+      <td>
+        <img
+          alt=""
+          height="35"
+          width="35"
+          [src]="'http://openweathermap.org/img/w/'+ period.weather[0].icon + '.png' ">
+        <div>{{period.clouds.all}}% at {{period.dt * 1000 | date : 'H:mm'}} hour</div>
+        <div *ngIf="period.rain && period.rain['3h']" class="font-weight-bold">Rain, {{period.rain["3h"].toFixed(2)}}mm
+          in 3 hour
+        </div>
+        <div *ngIf="period.snow && period.snow['3h']" class="font-weight-bold">Snow, {{period.snow["3h"].toFixed(2)}}mm
+          in 3 hour
+        </div>
+      </td>
+      <td>
+        <div><b>{{period.main.temp}}</b></div>
+      </td>
+      <td>
+        <div>{{period.wind.speed}}, {{getTextWindDirection(period.wind.deg)}}</div>
+      </td>
+      <td>
+        <div>{{capitalizeFirstLetter(period.weather[0].description)}}</div>
+        <div>Humidity - {{period.main.humidity}} %</div>
+        <div>Pressure - {{period.main.pressure}} hPa</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</ng-template>

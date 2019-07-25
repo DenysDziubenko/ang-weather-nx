@@ -8,6 +8,7 @@ module.exports = function(config) {
   const baseConfig = getBaseKarmaConfig();
   config.set({
     ...baseConfig,
+    files: ['src/google-mock.js'],
     coverageIstanbulReporter: {
       ...baseConfig.coverageIstanbulReporter,
       dir: join(__dirname, '../../coverage/apps/frontend')

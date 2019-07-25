@@ -1,0 +1,22 @@
+<div
+  @showState
+  *ngIf="(fiveDayWeather$ | async) as forecast">
+  <div class="pb-2 pt-2 text-nowrap scrollable">
+    <button
+      appScrollToCenter
+      [smoothBehavior] = 'true'
+      *ngFor="let day of (forecast.list | periodFilter | keyvalue: keyDescOrder) as days"
+      (click)="updatesTable(day.value, days)"
+      [ngClass]="{'active': day.value.selected}"
+      [@selectedState]="day.value.selected ? 'selected' : 'default'"
+      type="button"
+      class="btn btn-outline-primary m-1">
+      {{ day.key }}
+    </button>
+  </div>
+  <app-five-day-forecast-table
+    #table
+    [isTableValueChanged]="isTableValueChanged"
+    [periods]="(forecast.list | periodFilter).values().next().value.periods">
+  </app-five-day-forecast-table>
+</div>

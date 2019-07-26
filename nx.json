@@ -16,6 +16,9 @@
     },
     "backend": {
       "tags": []
+    },
+    "shared-data": {
+      "tags": []
     }
   }
 }

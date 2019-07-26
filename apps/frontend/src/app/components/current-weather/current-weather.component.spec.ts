@@ -2,9 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CurrentWeatherComponent } from './current-weather.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CurrentWeatherTableComponent } from '../current-weather-table/current-weather-table.component';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {StoreModule} from '@ngrx/store';
-import {reducers} from '../../reducers/app.reducers';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from '../../reducers/app.reducers';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 
 describe('CurrentWeatherComponent', () => {
   let component: CurrentWeatherComponent;
@@ -13,9 +14,19 @@ describe('CurrentWeatherComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NoopAnimationsModule, StoreModule.forRoot(reducers)],
-      declarations: [ CurrentWeatherComponent, CurrentWeatherTableComponent ]
+      declarations: [CurrentWeatherComponent, CurrentWeatherTableComponent],
+      providers: [
+        {
+          provide: SwPush,
+          useValue: {
+            messages: {
+              subscribe: () => () => {
+              }
+            }
+          }
+        }]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {ServiceHelper} from './services-helper';
-import {map, mergeMap} from 'rxjs/operators';
-import {City} from '../models/weather.models';
-import {Store} from '@ngrx/store';
-import {State} from '../reducers/app.reducers';
-import {Cities} from '../actions/app.actions';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map, mergeMap } from 'rxjs/operators';
+import { City } from '../models/weather.models';
+import { Store } from '@ngrx/store';
+import { State } from '../reducers/app.reducers';
+import { Cities } from '../actions/app.actions';
+import { ConfigData } from '@ang-weather-nx/shared-data';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,8 @@ export class CitiesService {
 
   constructor(
     private http: HttpClient,
-    private store: Store<State>) {}
+    private store: Store<State>) {
+  }
 
   searchCities(term: string): Observable<string[]> {
     if (term === '') {
@@ -25,25 +26,25 @@ export class CitiesService {
     }
 
     return this.http
-      .get(`${ServiceHelper.FIREBASE_URL}${this.path}?orderBy="name"&equalTo="${term}"`)
+      .get(`${ConfigData.FIREBASE_URL}${this.path}?orderBy="name"&equalTo="${term}"`)
       .pipe(map(response => {
-        this.store.dispatch(new Cities({cities: Object.values(response)}));
+        this.store.dispatch(new Cities({ cities: Object.values(response) }));
         return Object.keys(response).map(key => `${response[key].name}, ${response[key].country}`);
       }));
   }
 
   getCitiesByCountry(countryCode: string): Observable<City[]> {
     const limit = `&limitToFirst=2000`;
-    const url = `${ServiceHelper.FIREBASE_URL}${this.path}?orderBy="country"&equalTo="${countryCode}"${limit}`;
+    const url = `${ConfigData.FIREBASE_URL}${this.path}?orderBy="country"&equalTo="${countryCode}"${limit}`;
     return this.http.get<City[]>(url)
       .pipe(mergeMap(shortResponse => {
-        const cities = Object.values(shortResponse);
-        this.store.dispatch(new Cities({cities}));
-        return this.http.get<City[]>(url.replace(limit, ''), {params: {silent: 'true'}})
-          .pipe(map(longResponse => {
-            return Object.values(longResponse);
-          }));
-      })
-    );
+          const cities = Object.values(shortResponse);
+          this.store.dispatch(new Cities({ cities }));
+          return this.http.get<City[]>(url.replace(limit, ''), { params: { silent: 'true' } })
+            .pipe(map(longResponse => {
+              return Object.values(longResponse);
+            }));
+        })
+      );
   }
 }

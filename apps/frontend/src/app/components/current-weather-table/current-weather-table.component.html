@@ -1,4 +1,12 @@
 <div *ngIf="(currentWeather$ | async) as forecast" class="pt-2">
+  <button
+    type="button"
+    class="btn btn-outline-primary btn-lg btn-block mb-2"
+    [ngClass]="{'active': isSubscribed}"
+    [@selectedState]="isSubscribed ? 'selected' : 'unselected'"
+    (click)="subscribeToNotifications(); isSubscribed = !isSubscribed;">
+    {{isSubscribed ? 'Subscribed for incoming precipitations' : 'Click to subscribe for incoming precipitations'}}
+  </button>
   <div
     class="alert"
     [class.alert-primary]="forecast.main.temp <= 25"
@@ -14,7 +22,7 @@
     {{forecast.weather[0].main }},
     {{forecast.weather[0].description }}
   </div>
-  <table class="table" >
+  <table class="table">
     <tbody>
     <tr>
       <th scope="row" class="text-secondary font-weight-normal">Clouds, %</th>

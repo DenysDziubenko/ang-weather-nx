@@ -2,8 +2,12 @@ import {trigger, state, style, transition, animate} from '@angular/animations';
 
 export const selectedTrigger = trigger('selectedState', [
   state('default', style('*')),
+  state('unselected', style('*')),
   state('selected', style('*')),
   transition('default => selected', [
+    animate('300ms ease-out', style({transform: 'scale(1.1)'})),
+  ]),
+  transition('selected <=> unselected', [
     animate('300ms ease-out', style({transform: 'scale(1.1)'})),
   ])
 ]);

@@ -29,7 +29,7 @@
               "apps/frontend/src/manifest.json"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap/scss/bootstrap.scss",
               "apps/frontend/src/styles.scss"
             ],
             "scripts": []

@@ -1,12 +1,12 @@
-import {Action} from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import {
   BoundingBox,
   City,
   Country,
   CurrentWeather,
-  FiveDayWeather,
   RectangleZoneWeather
 } from '../models/weather.models';
+import { FiveDayWeather } from '@ang-weather-nx/shared-data';
 
 export enum AppActionTypes {
   SelectCityAction = '[SelectCity] Action',

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BoundingBox, CurrentWeather, FiveDayWeather, RectangleZoneWeather } from '../models/weather.models';
+import { BoundingBox, CurrentWeather, RectangleZoneWeather } from '../models/weather.models';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ConfigData } from '@ang-weather-nx/shared-data';
+import { ConfigData, FiveDayWeather } from '@ang-weather-nx/shared-data';
 
 @Injectable({
   providedIn: 'root'

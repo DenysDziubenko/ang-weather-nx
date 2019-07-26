@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import {
   AllCountries,
   AllCountriesRequested,
@@ -15,19 +15,20 @@ import {
   FiveDayWeatherRequested,
   GotAnErrorDuringRequest, CitiesWeatherWithinRectangleZoneRequested, CitiesWeatherWithinRectangleZone
 } from './actions/app.actions';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {ServiceHelper, STORAGE} from './services/services-helper';
-import {defer, Observable, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {State} from './reducers/app.reducers';
-import {CountriesService} from './services/countries.service';
-import {CitiesService} from './services/cities.service';
-import {WeatherService} from './services/weather.service';
+import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { ServiceHelper, STORAGE } from './services/services-helper';
+import { defer, Observable, of } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { State } from './reducers/app.reducers';
+import { CountriesService } from './services/countries.service';
+import { CitiesService } from './services/cities.service';
+import { WeatherService } from './services/weather.service';
 import {
   selectSelectedCityAndCurrentWeather,
   selectSelectedCityAndFiveDayWeather
 } from './app.selectors';
-import {City, CurrentWeather, FiveDayWeather} from './models/weather.models';
+import { City, CurrentWeather } from './models/weather.models';
+import { FiveDayWeather } from '@ang-weather-nx/shared-data';
 
 @Injectable()
 export class AppEffects {
@@ -50,11 +51,11 @@ export class AppEffects {
   init$ = defer(() => {
     const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
     if (city) {
-      return of(new SelectCity({city}));
+      return of(new SelectCity({ city }));
     }
   });
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   selectCity$: Observable<SelectCity> = this.actions$.pipe(
     ofType<SelectCity>(AppActionTypes.SelectCityAction),
     tap(action => ServiceHelper.setLocalStorageItem(STORAGE.CITY, action.payload.city)));
@@ -64,22 +65,22 @@ export class AppEffects {
     .pipe(
       ofType<AllCountriesRequested>(AppActionTypes.AllCountriesRequested),
       mergeMap(() => this.countriesService.getCountries().pipe(this.handleError)),
-      map(countries => new AllCountries({countries}))
+      map(countries => new AllCountries({ countries }))
     );
 
   @Effect()
   loadCitiesByCountry$: Observable<Cities> = this.actions$
     .pipe(
       ofType<CitiesByCountryRequested>(AppActionTypes.CitiesByCountryRequested),
-      mergeMap(({payload}) => this.citiesService.getCitiesByCountry(payload.countryCode).pipe(this.handleError)),
-      map(cities => new Cities({cities})));
+      mergeMap(({ payload }) => this.citiesService.getCitiesByCountry(payload.countryCode).pipe(this.handleError)),
+      map(cities => new Cities({ cities })));
 
   @Effect()
   searchCities$: Observable<CityNames> = this.actions$
     .pipe(
       ofType<SearchCitiesRequested>(AppActionTypes.SearchCitiesRequested),
-      mergeMap(({payload}) => this.citiesService.searchCities(payload.term).pipe(this.handleError)),
-      map(cityNames => new CityNames({cityNames})));
+      mergeMap(({ payload }) => this.citiesService.searchCities(payload.term).pipe(this.handleError)),
+      map(cityNames => new CityNames({ cityNames })));
 
   @Effect()
   currentWeather$: Observable<CurrentWeatherForecast> = this.actions$
@@ -98,7 +99,7 @@ export class AppEffects {
         return currentWeather.id === selectedCity.id ?
           of(currentWeather) : this.weatherService.getCurrentWeatherByCityId(selectedCity.id).pipe(this.handleError);
       }),
-      map(currentWeather => new CurrentWeatherForecast({currentWeather})));
+      map(currentWeather => new CurrentWeatherForecast({ currentWeather })));
 
   @Effect()
   fiveDayForecast$: Observable<FiveDayWeatherForecast> = this.actions$
@@ -117,13 +118,13 @@ export class AppEffects {
         return fiveDayWeather.city.id === selectedCity.id ?
           of(fiveDayWeather) : this.weatherService.get5DayForecastByCityId(selectedCity.id).pipe(this.handleError);
       }),
-      map(fiveDayWeather => new FiveDayWeatherForecast({fiveDayWeather})));
+      map(fiveDayWeather => new FiveDayWeatherForecast({ fiveDayWeather })));
 
   @Effect()
   citiesWeatherWithinRectangleZone$: Observable<CitiesWeatherWithinRectangleZone> = this.actions$
     .pipe(
       ofType<CitiesWeatherWithinRectangleZoneRequested>(AppActionTypes.CitiesWeatherWithinRectangleZoneRequested),
-      mergeMap(({payload}) =>
+      mergeMap(({ payload }) =>
         this.weatherService.getCitiesWeatherWithinRectangleZone(payload.boundingBox).pipe(this.handleError)),
-      map(rectangleZoneWeather => new CitiesWeatherWithinRectangleZone({rectangleZoneWeather})));
+      map(rectangleZoneWeather => new CitiesWeatherWithinRectangleZone({ rectangleZoneWeather })));
 }

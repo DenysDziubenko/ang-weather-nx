@@ -1,7 +1,7 @@
-import {Component, HostListener, Input, OnInit} from '@angular/core';
-import {ForecastPeriod} from '../../models/weather.models';
-import {capitalizeFirstLetter, getTextWindDirection} from '../../helpers/function-helpers';
-import {slideTrigger} from '../../helpers/animations';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { capitalizeFirstLetter, getTextWindDirection } from '../../helpers/function-helpers';
+import { slideTrigger } from '../../helpers/animations';
+import { ForecastPeriod } from '@ang-weather-nx/shared-data';
 
 @Component({
   selector: 'app-five-day-forecast-table',
@@ -19,7 +19,8 @@ export class FiveDayForecastTableComponent implements OnInit {
     this.getScreenSize();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {

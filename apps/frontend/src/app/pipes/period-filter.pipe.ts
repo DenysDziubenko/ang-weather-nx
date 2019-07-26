@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {DaysMap, ForecastPeriod} from '../models/weather.models';
+import { DaysMap } from '../models/weather.models';
+import { ForecastPeriod } from '@ang-weather-nx/shared-data';
 
 @Pipe({
   name: 'periodFilter'
@@ -15,7 +16,7 @@ export class PeriodFilterPipe implements PipeTransform {
       if (days.has(weekDay)) {
         days.get(weekDay).periods.push(period);
       } else {
-        days.set(weekDay, {selected: i === 0, periods: [period]});
+        days.set(weekDay, { selected: i === 0, periods: [period] });
       }
     });
 

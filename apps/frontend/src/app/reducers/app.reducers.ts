@@ -1,9 +1,10 @@
-import {ActionReducerMap, MetaReducer} from '@ngrx/store';
-import {environment} from '../../environments/environment';
-import {City, Country, CurrentWeather, FiveDayWeather, RectangleZoneWeather} from '../models/weather.models';
-import {AppActions, AppActionTypes} from '../actions/app.actions';
-import {storeFreeze} from 'ngrx-store-freeze';
-import {routerReducer} from '@ngrx/router-store';
+import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { environment } from '../../environments/environment';
+import { City, Country, CurrentWeather, RectangleZoneWeather } from '../models/weather.models';
+import { AppActions, AppActionTypes } from '../actions/app.actions';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { routerReducer } from '@ngrx/router-store';
+import { FiveDayWeather } from '@ang-weather-nx/shared-data';
 
 export interface AppState {
   selectedCity: City;
@@ -37,23 +38,23 @@ export interface State {
 export function appReducer(state: AppState = initialAppState, action: AppActions): AppState {
   switch (action.type) {
     case AppActionTypes.SelectCityAction:
-      return {...state, ...{selectedCity: action.payload.city}};
+      return { ...state, ...{ selectedCity: action.payload.city } };
     case AppActionTypes.SelectCountryAction:
-      return {...state, ...{selectedCountry: action.payload.country}};
+      return { ...state, ...{ selectedCountry: action.payload.country } };
     case AppActionTypes.AllCountriesAction:
-      return {...state, ...{allCountries: action.payload.countries}};
+      return { ...state, ...{ allCountries: action.payload.countries } };
     case AppActionTypes.CitiesAction:
-      return {...state, ...{cities: action.payload.cities}};
+      return { ...state, ...{ cities: action.payload.cities } };
     case AppActionTypes.CityNamesAction:
-      return {...state, ...{cityNames: action.payload.cityNames}};
+      return { ...state, ...{ cityNames: action.payload.cityNames } };
     case AppActionTypes.CurrentWeatherAction:
-      return {...state, ...{currentWeather: action.payload.currentWeather}};
+      return { ...state, ...{ currentWeather: action.payload.currentWeather } };
     case AppActionTypes.FiveDayWeatherAction:
-      return {...state, ...{fiveDayWeather: action.payload.fiveDayWeather}};
+      return { ...state, ...{ fiveDayWeather: action.payload.fiveDayWeather } };
     case AppActionTypes.GotAnErrorDuringRequest:
-      return {...state, ...{error: action.payload.error}};
+      return { ...state, ...{ error: action.payload.error } };
     case AppActionTypes.CitiesWeatherWithinRectangleZone:
-      return {...state, ...{rectangleZoneWeather: action.payload.rectangleZoneWeather}};
+      return { ...state, ...{ rectangleZoneWeather: action.payload.rectangleZoneWeather } };
     default:
       return state;
   }

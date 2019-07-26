@@ -1,4 +1,5 @@
-import {KeyValue} from '@angular/common';
+import { KeyValue } from '@angular/common';
+import { Clouds, ForecastPeriod, Main, Precipitation, Weather, Wind } from '@ang-weather-nx/shared-data';
 
 export type DaysMap = Map<string, DayValue>;
 export type DaysKeyValue = KeyValue<string, DayValue>;
@@ -57,70 +58,9 @@ export class CurrentWeather {
   cod: number;
 }
 
-export class FiveDayWeather {
-  cod: string;
-  message: number;
-  city:
-    {
-      id: number;
-      name: string;
-      coord:
-        {
-          lat: number;
-          lon: number;
-        };
-      country: string;
-    };
-  cnt: number;
-  list: ForecastPeriod[];
-}
-
 export class RectangleZoneWeather {
   calctime: number;
   cnt: number;
   cod: number;
   list: ForecastPeriod[];
-}
-
-class Main {
-  temp: number;
-  pressure: number;
-  humidity: number;
-  'temp_min': number;
-  'temp_max': number;
-  'sea_level'?: number;
-  'grnd_level'?: number;
-  'temp_kf'?: number;
-}
-
-class Weather {
-  id: number;
-  main: string;
-  description: string;
-  icon: string;
-}
-
-class Clouds {
-  all: number;
-}
-
-class Wind {
-  speed: number;
-  deg: number;
-}
-
-class Precipitation {
-  '1h': number;
-  '3h': number;
-}
-
-export class ForecastPeriod {
-  dt: number;
-  main: Main;
-  weather: Weather[];
-  clouds: Clouds;
-  wind: Wind;
-  rain: Precipitation;
-  snow: Precipitation;
-  'dt_txt': string;
 }

@@ -8,3 +8,7 @@ export function getTextWindDirection(deg: number) {
   const val = Math.floor((deg / 22.5) + 0.5);
   return directions[val % 16];
 }
+
+export function getRandomId(){
+  return Math.random() * 1e17;
+}

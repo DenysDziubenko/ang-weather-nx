@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Clouds, ForecastPeriod, Main, Precipitation, Weather, Wind } from '@ang-weather-nx/shared-data';
+import { Clouds, Coord, ForecastPeriod, Main, Precipitation, Weather, Wind } from '@ang-weather-nx/shared-data';
 
 export type DaysMap = Map<string, DayValue>;
 export type DaysKeyValue = KeyValue<string, DayValue>;
@@ -17,20 +17,8 @@ export interface BoundingBox {
   zoom: number;
 }
 
-interface Coord {
-  lat: number;
-  lon: number;
-}
-
 export class Country {
   code: string;
-  name: string;
-}
-
-export class City {
-  coord: Coord;
-  country: string;
-  id: number;
   name: string;
 }
 

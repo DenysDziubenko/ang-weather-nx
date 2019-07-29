@@ -1,15 +1,17 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { City, Country, CurrentWeather, RectangleZoneWeather } from '../models/weather.models';
+import { Country, CurrentWeather, RectangleZoneWeather } from '../models/weather.models';
 import { AppActions, AppActionTypes } from '../actions/app.actions';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { routerReducer } from '@ngrx/router-store';
-import { FiveDayWeather } from '@ang-weather-nx/shared-data';
+import { City, FiveDayWeather, UserSubscriptions } from '@ang-weather-nx/shared-data';
 
 export interface AppState {
   selectedCity: City;
   selectedCountry: Country;
   allCountries: Country[];
+  allSubscriptions: UserSubscriptions;
+  userId: number;
   cities: City[];
   cityNames: string[];
   currentWeather: CurrentWeather;
@@ -22,6 +24,8 @@ export const initialAppState: AppState = {
   selectedCity: undefined,
   selectedCountry: undefined,
   allCountries: [],
+  allSubscriptions: undefined,
+  userId: undefined,
   cities: [],
   cityNames: [],
   currentWeather: undefined,
@@ -39,10 +43,24 @@ export function appReducer(state: AppState = initialAppState, action: AppActions
   switch (action.type) {
     case AppActionTypes.SelectCityAction:
       return { ...state, ...{ selectedCity: action.payload.city } };
+    case AppActionTypes.UserIdAction:
+      return { ...state, ...{ userId: action.payload.userId} };
     case AppActionTypes.SelectCountryAction:
       return { ...state, ...{ selectedCountry: action.payload.country } };
     case AppActionTypes.AllCountriesAction:
       return { ...state, ...{ allCountries: action.payload.countries } };
+    case AppActionTypes.NewUserSubscriptionAction:
+      const newSub = [{ city: state.selectedCity , pushSubscription: action.payload.subscription}];
+      const allSubs = state.allSubscriptions && state.allSubscriptions.subscriptions;
+      const subs = [...allSubs || [], ...newSub];
+      return { ...state, ...{ allSubscriptions: { userId: state.userId, subscriptions: subs}} };
+    case AppActionTypes.RemoveUserSubscriptionAction:
+      const selectedCity = state.selectedCity;
+      const allUserSubs = state.allSubscriptions && state.allSubscriptions.subscriptions;
+      const subscriptions = [...allUserSubs || []].filter(sub => sub.city.id !== selectedCity.id);
+      return { ...state, ...{ allSubscriptions: { userId: state.userId, subscriptions}} };
+    case AppActionTypes.AllSubscriptionsAction:
+      return { ...state, ...{ allSubscriptions: action.payload.subscriptions} };
     case AppActionTypes.CitiesAction:
       return { ...state, ...{ cities: action.payload.cities } };
     case AppActionTypes.CityNamesAction:

@@ -46,3 +46,8 @@ export const selectRectangleZoneWeather = createSelector(
   selectCityAppState,
   state => state.rectangleZoneWeather
 );
+
+export const selectSelectedCityAndAllSubscriptions = createSelector(
+  selectCityAppState,
+  state => [state.selectedCity, state.allSubscriptions]
+);

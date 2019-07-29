@@ -13,7 +13,14 @@ import {
   CurrentWeatherForecast,
   FiveDayWeatherForecast,
   FiveDayWeatherRequested,
-  GotAnErrorDuringRequest, CitiesWeatherWithinRectangleZoneRequested, CitiesWeatherWithinRectangleZone
+  GotAnErrorDuringRequest,
+  CitiesWeatherWithinRectangleZoneRequested,
+  CitiesWeatherWithinRectangleZone,
+  AllSubscriptions,
+  AllSubscriptionsRequested,
+  NewUserSubscription,
+  RemoveUserSubscription,
+  UserId
 } from './actions/app.actions';
 import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ServiceHelper, STORAGE } from './services/services-helper';
@@ -27,8 +34,9 @@ import {
   selectSelectedCityAndCurrentWeather,
   selectSelectedCityAndFiveDayWeather
 } from './app.selectors';
-import { City, CurrentWeather } from './models/weather.models';
-import { FiveDayWeather } from '@ang-weather-nx/shared-data';
+import { CurrentWeather } from './models/weather.models';
+import { City, FiveDayWeather } from '@ang-weather-nx/shared-data';
+import { getRandomId } from './helpers/function-helpers';
 
 @Injectable()
 export class AppEffects {
@@ -48,11 +56,18 @@ export class AppEffects {
   });
 
   @Effect()
-  init$ = defer(() => {
+  initCity$ = defer(() => {
     const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
     if (city) {
       return of(new SelectCity({ city }));
     }
+  });
+
+  @Effect()
+  initUser$ = defer(() => {
+    const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID) || getRandomId();
+    ServiceHelper.setLocalStorageItem(STORAGE.USER_ID, userId);
+    return of(new UserId({ userId }));
   });
 
   @Effect({ dispatch: false })
@@ -65,8 +80,40 @@ export class AppEffects {
     .pipe(
       ofType<AllCountriesRequested>(AppActionTypes.AllCountriesRequested),
       mergeMap(() => this.countriesService.getCountries().pipe(this.handleError)),
-      map(countries => new AllCountries({ countries }))
+      map(countries => new AllCountries({ countries })));
+
+  @Effect()
+  loadAllSubscriptions$: Observable<AllSubscriptions> = this.actions$
+    .pipe(
+      ofType<AllSubscriptionsRequested>(AppActionTypes.AllSubscriptionsRequested),
+      mergeMap(() => {
+        const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
+        return userId ? this.weatherService.getSubscriptions(userId).pipe(this.handleError) : of(null);
+      }),
+      map(subscriptions => new AllSubscriptions({ subscriptions }))
     );
+
+  @Effect({ dispatch: false })
+  addSubscription$: Observable<NewUserSubscription> = this.actions$.pipe(
+    ofType<NewUserSubscription>(AppActionTypes.NewUserSubscriptionAction),
+    mergeMap(({ payload }) => {
+      // TODO refactor to take userId and cityId from storage and remove { dispatch: false }
+      const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
+      const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
+      const userSub = { userId, subscriptions: [{ city, pushSubscription: payload.subscription }] };
+      return this.weatherService.addPushSubscriber(userSub).pipe(this.handleError);
+    }));
+
+  @Effect({ dispatch: false })
+  removeSubscription$: Observable<RemoveUserSubscription> = this.actions$.pipe(
+    ofType<RemoveUserSubscription>(AppActionTypes.RemoveUserSubscriptionAction),
+    mergeMap(() => {
+      // TODO refactor to take userId and cityId from storage and remove { dispatch: false }
+      const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
+      const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
+      return this.weatherService.removePushSubscriber({ userId, cityId: city.id}).pipe(this.handleError);
+    }));
+
 
   @Effect()
   loadCitiesByCountry$: Observable<Cities> = this.actions$

@@ -1,21 +1,22 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import {NavigationEnd, Router, RouterEvent} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
-import {bufferCount, debounceTime, distinctUntilChanged, map, skipWhile, switchMap} from 'rxjs/operators';
-import {City, Country} from './models/weather.models';
-import {selectedTrigger, showTrigger} from './helpers/animations';
-import {SwUpdate} from '@angular/service-worker';
-import {select, Store} from '@ngrx/store';
-import {State} from './reducers/app.reducers';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { Observable, of, Subscription } from 'rxjs';
+import { bufferCount, debounceTime, distinctUntilChanged, map, skipWhile, switchMap } from 'rxjs/operators';
+import { Country } from './models/weather.models';
+import { selectedTrigger, showTrigger } from './helpers/animations';
+import { SwUpdate } from '@angular/service-worker';
+import { select, Store } from '@ngrx/store';
+import { State } from './reducers/app.reducers';
 import {
-  AllCountriesRequested,
+  AllCountriesRequested, AllSubscriptionsRequested,
   CitiesByCountryRequested,
   SearchCitiesRequested,
   SelectCity,
   SelectCountry
 } from './actions/app.actions';
-import {selectCities, selectCityNames, selectError} from './app.selectors';
+import { selectCities, selectCityNames, selectError } from './app.selectors';
+import { City } from '@ang-weather-nx/shared-data';
 
 @Component({
   selector: 'app-root',
@@ -25,8 +26,8 @@ import {selectCities, selectCityNames, selectError} from './app.selectors';
   animations: [selectedTrigger, showTrigger]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  @ViewChild('citySearch', {static: false}) citySearchElement: any;
-  @ViewChild('dialog', {static: false}) dialogElement: any;
+  @ViewChild('citySearch', { static: false }) citySearchElement: any;
+  @ViewChild('dialog', { static: false }) dialogElement: any;
   subs: Subscription[] = [];
   currentUrl: string;
   cityText: string;
@@ -58,6 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.store.dispatch(new AllCountriesRequested());
+    this.store.dispatch(new AllSubscriptionsRequested());
 
     this.router.events.subscribe((e: RouterEvent) => {
       if (e instanceof NavigationEnd && e.url) {
@@ -66,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.subs.push(this.store.subscribe(state => {
-      const {selectedCity, allCountries, cities} = state.appState;
+      const { selectedCity, allCountries, cities } = state.appState;
       this.allCountries = allCountries;
       this.cities = cities;
       if (!this.selectedCity && selectedCity) {
@@ -85,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe(cities => {
         if (cities.every(city => !city.length)) {
-          this.modalService.open(this.dialogElement, {centered: true});
+          this.modalService.open(this.dialogElement, { centered: true });
           sub1.unsubscribe();
         }
       });
@@ -93,8 +95,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subs.push(this.store.pipe(select(selectError))
       .subscribe(error => {
         if (error) {
-          this.errorMessage = `Got an error during request: ${JSON.stringify(error)}`;
-          this.modalService.open(this.dialogElement, {centered: true});
+          const message = error.message;
+          this.errorMessage = `Got an error during request: ${message ? message : JSON.stringify(error)}`;
+          this.modalService.open(this.dialogElement, { centered: true });
         }
       }));
   }
@@ -111,18 +114,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/fiveDayForecast');
   }
 
-  searchCitiesByCountry({item: countryName}) {
+  searchCitiesByCountry({ item: countryName }) {
     this.selectedCountry = this.allCountries.find(country => country.name === countryName);
     if (this.selectedCountry) {
-      this.store.dispatch(new SelectCountry({country: this.selectedCountry}));
-      this.store.dispatch(new CitiesByCountryRequested({countryCode: this.selectedCountry.code}));
+      this.store.dispatch(new SelectCountry({ country: this.selectedCountry }));
+      this.store.dispatch(new CitiesByCountryRequested({ countryCode: this.selectedCountry.code }));
     }
   }
 
-  selectCity({item: cityName}) {
+  selectCity({ item: cityName }) {
     this.isCollapsed = true;
     this.selectedCity = this.cities.find(city => `${city.name}, ${city.country}` === cityName);
-    this.store.dispatch(new SelectCity({city: this.selectedCity}));
+    this.store.dispatch(new SelectCity({ city: this.selectedCity }));
   }
 
   searchCountries = (text$: Observable<string>) =>
@@ -137,7 +140,7 @@ export class AppComponent implements OnInit, OnDestroy {
         const countries = this.allCountries.map(country => country.name);
         return countries
           .filter(countryName => countryName.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10);
-      }))
+      }));
 
   searchCities = (text$: Observable<string>) =>
     text$.pipe(
@@ -149,7 +152,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         if (!this.selectedCountry || !this.countryText) {
-          this.store.dispatch(new SearchCitiesRequested({term: term.charAt(0).toUpperCase() + term.slice(1)}));
+          this.store.dispatch(new SearchCitiesRequested({ term: term.charAt(0).toUpperCase() + term.slice(1) }));
           return this.store.pipe(select(selectCityNames));
         }
 
@@ -157,5 +160,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
         return of(cities
           .filter(cityName => cityName.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
-      }))
+      }));
 }

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {BoundingBox, City} from '../../models/weather.models';
+import {BoundingBox} from '../../models/weather.models';
 import {Subscription} from 'rxjs';
 import {} from 'googlemaps';
 import {showTrigger} from '../../helpers/animations';
@@ -7,6 +7,7 @@ import {select, Store} from '@ngrx/store';
 import {State} from '../../reducers/app.reducers';
 import {CitiesWeatherWithinRectangleZoneRequested, CurrentWeatherRequested} from '../../actions/app.actions';
 import {selectRectangleZoneWeather, selectSelectedCity} from '../../app.selectors';
+import { City } from '@ang-weather-nx/shared-data';
 
 @Component({
   selector: 'app-current-weather',

@@ -6,6 +6,7 @@ export enum STORAGE {
   CURRENT_FORECAST = 'CURRENT_FORECAST',
   FIVE_DAY_FORECAST = 'FIVE_FORECAST',
   CITY = 'CITY',
+  USER_ID = 'USER_ID',
 }
 
 @Injectable({

@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap } from 'rxjs/operators';
-import { City } from '../models/weather.models';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers/app.reducers';
 import { Cities } from '../actions/app.actions';
-import { ConfigData } from '@ang-weather-nx/shared-data';
+import { City, ConfigData } from '@ang-weather-nx/shared-data';
 
 @Injectable({
   providedIn: 'root'

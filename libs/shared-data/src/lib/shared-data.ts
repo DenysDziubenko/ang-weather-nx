@@ -1,7 +1,32 @@
 export class ConfigData {
+  static NOTIFICATIONS_URL = 'api/notifications';
   static FIREBASE_URL = 'https://weather-app-6e386.firebaseio.com/';
   static OPENWEATHERMAP_APPID = '547e48458270f5cd9a271cb7e1cdec51';
   static OPENWEATHERMAP_URL = 'https://api.openweathermap.org/data/2.5/';
+  static VAPID_PUBLIC_KEY = 'BI3NVkrJAjjR1mFI408NCYtT-SnJ2KZrk5brxtRBySxrqoy_nIi4Ly1jnyB0YfYLXoF8QaEpYvZKO7eDJn-TA1M';
+  static VAPID_PRIVAT_KEY = 'lzExeQb_2BdOGdyvxsBYXp1gxqfzCxVHmQit91GGFr8';
+}
+
+export class UserSubscriptions {
+  userId: number;
+  subscriptions : Array<Subscription>
+}
+
+export class Subscription {
+  city: City;
+  pushSubscription: PushSubscription
+}
+
+export class City {
+  coord: Coord;
+  country: string;
+  id: number;
+  name: string;
+}
+
+export interface Coord {
+  lat: number;
+  lon: number;
 }
 
 export class FiveDayWeather {

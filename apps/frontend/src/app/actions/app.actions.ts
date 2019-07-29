@@ -1,18 +1,22 @@
 import { Action } from '@ngrx/store';
 import {
   BoundingBox,
-  City,
   Country,
   CurrentWeather,
   RectangleZoneWeather
 } from '../models/weather.models';
-import { FiveDayWeather } from '@ang-weather-nx/shared-data';
+import { City, FiveDayWeather, UserSubscriptions } from '@ang-weather-nx/shared-data';
 
 export enum AppActionTypes {
   SelectCityAction = '[SelectCity] Action',
+  UserIdAction = '[UserId] Action',
   SelectCountryAction = '[SelectCountry] Action',
   AllCountriesAction = '[AllCountries] Action',
+  AllSubscriptionsAction = '[AllSubscriptions] Action',
+  NewUserSubscriptionAction = '[NewUserSubscription] Action',
+  RemoveUserSubscriptionAction = '[RemoveUserSubscription] Action',
   AllCountriesRequested = '[AllCountriesRequested] All Countries Requested',
+  AllSubscriptionsRequested = '[AllSubscriptionsRequested] All Subscriptions Requested',
   CitiesByCountryRequested = '[CitiesByCountryRequested] Cities By Country Requested',
   CurrentWeatherRequested = '[CurrentWeatherRequested] Current Weather Requested',
   FiveDayWeatherRequested = '[FiveDayWeatherRequested] Five Day Weather Requested',
@@ -30,6 +34,13 @@ export class SelectCity implements Action {
   readonly type = AppActionTypes.SelectCityAction;
 
   constructor(public payload: { city: City }) {
+  }
+}
+
+export class UserId implements Action {
+  readonly type = AppActionTypes.UserIdAction;
+
+  constructor(public payload: { userId: number }) {
   }
 }
 
@@ -70,6 +81,28 @@ export class CitiesWeatherWithinRectangleZone implements Action {
 
 export class AllCountriesRequested implements Action {
   readonly type = AppActionTypes.AllCountriesRequested;
+}
+
+export class NewUserSubscription implements Action {
+  readonly type = AppActionTypes.NewUserSubscriptionAction;
+
+  constructor(public payload: { subscription: any }) {
+  }
+}
+
+export class RemoveUserSubscription implements Action {
+  readonly type = AppActionTypes.RemoveUserSubscriptionAction;
+}
+
+export class AllSubscriptionsRequested implements Action {
+  readonly type = AppActionTypes.AllSubscriptionsRequested;
+}
+
+export class AllSubscriptions implements Action {
+  readonly type = AppActionTypes.AllSubscriptionsAction;
+
+  constructor(public payload: { subscriptions: UserSubscriptions }) {
+  }
 }
 
 export class CitiesWeatherWithinRectangleZoneRequested implements Action {
@@ -124,14 +157,19 @@ export class FiveDayWeatherForecast implements Action {
 
 export type AppActions =
   SelectCity |
+  UserId |
   SelectCountry |
   AllCountries |
+  AllSubscriptions |
+  NewUserSubscription |
+  RemoveUserSubscription |
   Cities |
   CityNames |
   CitiesWeatherWithinRectangleZone |
   CurrentWeatherForecast |
   FiveDayWeatherForecast |
   AllCountriesRequested |
+  AllSubscriptionsRequested |
   CitiesByCountryRequested |
   CurrentWeatherRequested |
   FiveDayWeatherRequested |

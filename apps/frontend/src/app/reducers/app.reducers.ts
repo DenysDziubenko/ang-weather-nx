@@ -11,7 +11,6 @@ export interface AppState {
   selectedCountry: Country;
   allCountries: Country[];
   allSubscriptions: UserSubscriptions;
-  userId: number;
   cities: City[];
   cityNames: string[];
   currentWeather: CurrentWeather;
@@ -25,7 +24,6 @@ export const initialAppState: AppState = {
   selectedCountry: undefined,
   allCountries: [],
   allSubscriptions: undefined,
-  userId: undefined,
   cities: [],
   cityNames: [],
   currentWeather: undefined,
@@ -43,8 +41,6 @@ export function appReducer(state: AppState = initialAppState, action: AppActions
   switch (action.type) {
     case AppActionTypes.SelectCityAction:
       return { ...state, ...{ selectedCity: action.payload.city } };
-    case AppActionTypes.UserIdAction:
-      return { ...state, ...{ userId: action.payload.userId} };
     case AppActionTypes.SelectCountryAction:
       return { ...state, ...{ selectedCountry: action.payload.country } };
     case AppActionTypes.AllCountriesAction:

@@ -9,7 +9,6 @@ import { City, FiveDayWeather, UserSubscriptions } from '@ang-weather-nx/shared-
 
 export enum AppActionTypes {
   SelectCityAction = '[SelectCity] Action',
-  UserIdAction = '[UserId] Action',
   SelectCountryAction = '[SelectCountry] Action',
   AllCountriesAction = '[AllCountries] Action',
   AllSubscriptionsAction = '[AllSubscriptions] Action',
@@ -34,13 +33,6 @@ export class SelectCity implements Action {
   readonly type = AppActionTypes.SelectCityAction;
 
   constructor(public payload: { city: City }) {
-  }
-}
-
-export class UserId implements Action {
-  readonly type = AppActionTypes.UserIdAction;
-
-  constructor(public payload: { userId: number }) {
   }
 }
 
@@ -157,7 +149,6 @@ export class FiveDayWeatherForecast implements Action {
 
 export type AppActions =
   SelectCity |
-  UserId |
   SelectCountry |
   AllCountries |
   AllSubscriptions |

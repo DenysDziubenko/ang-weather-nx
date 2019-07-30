@@ -83,12 +83,12 @@ export class AppService {
     return this.userSubscriptions.find(userSub => userSub.userId === userId);
   }
 
-  getSubscriptions(userId: number) {
+  getSubscriptions(userId: number): UserSubscriptions {
     const userSub = this.findUserSubscription(userId);
-    return userSub ? userSub : [];
+    return userSub ? userSub : {userId, subscriptions: []};
   }
 
-  addSubscription(userSubscription: UserSubscriptions) {
+  addSubscription(userSubscription: UserSubscriptions): UserSubscriptions {
     const userSub = this.findUserSubscription(userSubscription.userId);
 
     if (userSub) {
@@ -100,7 +100,7 @@ export class AppService {
     return this.findUserSubscription(userSubscription.userId);
   }
 
-  deleteSubscription(userId: number, cityId: number) {
+  deleteSubscription(userId: number, cityId: number): UserSubscriptions {
     const userSub = this.findUserSubscription(userId);
 
     if (userSub) {

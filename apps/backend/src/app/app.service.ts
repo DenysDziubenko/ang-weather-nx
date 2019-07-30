@@ -85,7 +85,7 @@ export class AppService {
 
   getSubscriptions(userId: number) {
     const userSub = this.findUserSubscription(userId);
-    return userSub ? userSub.subscriptions : [];
+    return userSub ? userSub : [];
   }
 
   addSubscription(userSubscription: UserSubscriptions) {
@@ -97,7 +97,7 @@ export class AppService {
       this.userSubscriptions.push(userSubscription);
     }
     this.setWeatherPolling();
-    return this.userSubscriptions;
+    return this.findUserSubscription(userSubscription.userId);
   }
 
   deleteSubscription(userId: number, cityId: number) {
@@ -108,6 +108,6 @@ export class AppService {
     }
     this.setWeatherPolling();
 
-    return this.userSubscriptions;
+    return userSub;
   }
 }

@@ -49,16 +49,6 @@ export function appReducer(state: AppState = initialAppState, action: AppActions
       return { ...state, ...{ selectedCountry: action.payload.country } };
     case AppActionTypes.AllCountriesAction:
       return { ...state, ...{ allCountries: action.payload.countries } };
-    case AppActionTypes.NewUserSubscriptionAction:
-      const newSub = [{ city: state.selectedCity , pushSubscription: action.payload.subscription}];
-      const allSubs = state.allSubscriptions && state.allSubscriptions.subscriptions;
-      const subs = [...allSubs || [], ...newSub];
-      return { ...state, ...{ allSubscriptions: { userId: state.userId, subscriptions: subs}} };
-    case AppActionTypes.RemoveUserSubscriptionAction:
-      const selectedCity = state.selectedCity;
-      const allUserSubs = state.allSubscriptions && state.allSubscriptions.subscriptions;
-      const subscriptions = [...allUserSubs || []].filter(sub => sub.city.id !== selectedCity.id);
-      return { ...state, ...{ allSubscriptions: { userId: state.userId, subscriptions}} };
     case AppActionTypes.AllSubscriptionsAction:
       return { ...state, ...{ allSubscriptions: action.payload.subscriptions} };
     case AppActionTypes.CitiesAction:

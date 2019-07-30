@@ -13,8 +13,8 @@ export enum AppActionTypes {
   SelectCountryAction = '[SelectCountry] Action',
   AllCountriesAction = '[AllCountries] Action',
   AllSubscriptionsAction = '[AllSubscriptions] Action',
-  NewUserSubscriptionAction = '[NewUserSubscription] Action',
-  RemoveUserSubscriptionAction = '[RemoveUserSubscription] Action',
+  NewUserSubscriptionRequested = '[NewUserSubscriptionRequested] New User Subscription Requested',
+  RemoveUserSubscriptionRequested = '[RemoveUserSubscriptionRequested] Remove User Subscription Requested',
   AllCountriesRequested = '[AllCountriesRequested] All Countries Requested',
   AllSubscriptionsRequested = '[AllSubscriptionsRequested] All Subscriptions Requested',
   CitiesByCountryRequested = '[CitiesByCountryRequested] Cities By Country Requested',
@@ -83,15 +83,15 @@ export class AllCountriesRequested implements Action {
   readonly type = AppActionTypes.AllCountriesRequested;
 }
 
-export class NewUserSubscription implements Action {
-  readonly type = AppActionTypes.NewUserSubscriptionAction;
+export class NewUserSubscriptionRequested implements Action {
+  readonly type = AppActionTypes.NewUserSubscriptionRequested;
 
   constructor(public payload: { subscription: any }) {
   }
 }
 
-export class RemoveUserSubscription implements Action {
-  readonly type = AppActionTypes.RemoveUserSubscriptionAction;
+export class RemoveUserSubscriptionRequested implements Action {
+  readonly type = AppActionTypes.RemoveUserSubscriptionRequested;
 }
 
 export class AllSubscriptionsRequested implements Action {
@@ -161,8 +161,8 @@ export type AppActions =
   SelectCountry |
   AllCountries |
   AllSubscriptions |
-  NewUserSubscription |
-  RemoveUserSubscription |
+  NewUserSubscriptionRequested |
+  RemoveUserSubscriptionRequested |
   Cities |
   CityNames |
   CitiesWeatherWithinRectangleZone |

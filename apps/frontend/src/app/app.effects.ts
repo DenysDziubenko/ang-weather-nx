@@ -18,9 +18,7 @@ import {
   CitiesWeatherWithinRectangleZone,
   AllSubscriptions,
   AllSubscriptionsRequested,
-  NewUserSubscription,
-  RemoveUserSubscription,
-  UserId
+  UserId, NewUserSubscriptionRequested, RemoveUserSubscriptionRequested
 } from './actions/app.actions';
 import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ServiceHelper, STORAGE } from './services/services-helper';
@@ -32,7 +30,7 @@ import { CitiesService } from './services/cities.service';
 import { WeatherService } from './services/weather.service';
 import {
   selectSelectedCityAndCurrentWeather,
-  selectSelectedCityAndFiveDayWeather
+  selectSelectedCityAndFiveDayWeather, selectSelectedCityAndUserId, selectUserId
 } from './app.selectors';
 import { CurrentWeather } from './models/weather.models';
 import { City, FiveDayWeather } from '@ang-weather-nx/shared-data';
@@ -86,33 +84,36 @@ export class AppEffects {
   loadAllSubscriptions$: Observable<AllSubscriptions> = this.actions$
     .pipe(
       ofType<AllSubscriptionsRequested>(AppActionTypes.AllSubscriptionsRequested),
-      mergeMap(() => {
-        const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
-        return userId ? this.weatherService.getSubscriptions(userId).pipe(this.handleError) : of(null);
-      }),
+      withLatestFrom(this.store.pipe(select(selectUserId))),
+      filter(([action, userId]) => !!userId),
+      mergeMap(([action, userId]) => this.weatherService.getSubscriptions(userId).pipe(this.handleError)),
       map(subscriptions => new AllSubscriptions({ subscriptions }))
     );
 
-  @Effect({ dispatch: false })
-  addSubscription$: Observable<NewUserSubscription> = this.actions$.pipe(
-    ofType<NewUserSubscription>(AppActionTypes.NewUserSubscriptionAction),
-    mergeMap(({ payload }) => {
-      // TODO refactor to take userId and cityId from storage and remove { dispatch: false }
-      const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
-      const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
-      const userSub = { userId, subscriptions: [{ city, pushSubscription: payload.subscription }] };
+  @Effect()
+  addSubscription$: Observable<AllSubscriptions> = this.actions$.pipe(
+    ofType<NewUserSubscriptionRequested>(AppActionTypes.NewUserSubscriptionRequested),
+    withLatestFrom(this.store.pipe(select(selectSelectedCityAndUserId))),
+    filter(([action, data]) => !!data[0]),
+    mergeMap(([action, data]) => {
+      const city = data[0];
+      const userId = data[1];
+      const userSub = { userId, subscriptions: [{ city, pushSubscription: action.payload.subscription }] };
       return this.weatherService.addSubscription(userSub).pipe(this.handleError);
-    }));
+    }),
+    map(subscriptions => new AllSubscriptions({ subscriptions })));
 
-  @Effect({ dispatch: false })
-  removeSubscription$: Observable<RemoveUserSubscription> = this.actions$.pipe(
-    ofType<RemoveUserSubscription>(AppActionTypes.RemoveUserSubscriptionAction),
-    mergeMap(() => {
-      // TODO refactor to take userId and cityId from storage and remove { dispatch: false }
-      const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
-      const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
-      return this.weatherService.removeSubscription({ userId, cityId: city.id}).pipe(this.handleError);
-    }));
+  @Effect()
+  removeSubscription$: Observable<AllSubscriptions> = this.actions$.pipe(
+    ofType<RemoveUserSubscriptionRequested>(AppActionTypes.RemoveUserSubscriptionRequested),
+    withLatestFrom(this.store.pipe(select(selectSelectedCityAndUserId))),
+    filter(([action, data]) => !!data[0]),
+    mergeMap(([action, data]) => {
+      const city = data[0];
+      const userId = data[1];
+      return this.weatherService.removeSubscription({ userId, cityId: city.id }).pipe(this.handleError);
+    }),
+    map(subscriptions => new AllSubscriptions({ subscriptions })));
 
 
   @Effect()

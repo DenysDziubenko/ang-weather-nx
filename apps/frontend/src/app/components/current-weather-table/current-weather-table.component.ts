@@ -11,7 +11,11 @@ import {
 import { selectedTrigger } from '../../helpers/animations';
 import { SwPush } from '@angular/service-worker';
 import { City, ConfigData, UserSubscriptions } from '@ang-weather-nx/shared-data';
-import { GotAnErrorDuringRequest, NewUserSubscription, RemoveUserSubscription } from '../../actions/app.actions';
+import {
+  GotAnErrorDuringRequest,
+  NewUserSubscriptionRequested,
+  RemoveUserSubscriptionRequested
+} from '../../actions/app.actions';
 
 @Component({
   selector: 'app-current-weather-table',
@@ -48,10 +52,10 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
 
   subscribeToNotifications() {
     if (this.isSubscribed) {
-      this.store.dispatch(new RemoveUserSubscription());
+      this.store.dispatch(new RemoveUserSubscriptionRequested());
     } else {
       this.swPush.requestSubscription({ serverPublicKey: ConfigData.VAPID_PUBLIC_KEY })
-        .then((subscription: PushSubscription) => this.store.dispatch(new NewUserSubscription({ subscription })))
+        .then((subscription: PushSubscription) => this.store.dispatch(new NewUserSubscriptionRequested({ subscription })))
         .catch(error => this.store.dispatch(new GotAnErrorDuringRequest({ error })));
     }
   }

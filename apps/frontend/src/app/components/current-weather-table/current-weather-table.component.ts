@@ -42,6 +42,7 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
         }
       }));
     this.swPush.messages.subscribe(messages => {
+      // TODO customize behavior
       console.log(messages);
     });
   }

@@ -9,12 +9,7 @@ export class ConfigData {
 
 export class UserSubscriptions {
   userId: number;
-  subscriptions : Array<Subscription>
-}
-
-export class Subscription {
-  city: City;
-  pushSubscription: PushSubscription
+  subscriptions: Array<{ city: City, pushSubscription: PushSubscription }>;
 }
 
 export class City {
@@ -32,17 +27,7 @@ export interface Coord {
 export class FiveDayWeather {
   cod: string;
   message: number;
-  city:
-    {
-      id: number;
-      name: string;
-      coord:
-        {
-          lat: number;
-          lon: number;
-        };
-      country: string;
-    };
+  city: City;
   cnt: number;
   list: ForecastPeriod[];
 }

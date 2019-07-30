@@ -15,13 +15,13 @@ export class AppController {
   }
 
   @Get(ConfigData.NOTIFICATIONS_URL)
-  getSubscriptions(@Query('userId') id: number) {
-    return this.appService.getSubscriptions(id);
+  getSubscriptions(@Query('userId') userId: number) {
+    return this.appService.getSubscriptions(userId);
   }
 
   @Post(ConfigData.NOTIFICATIONS_URL)
-  addPushSubscriber(@Body() subscription) {
-    return this.appService.addPushSubscriber(JSON.parse(subscription));
+  addSubscription(@Body() subscription) {
+    return this.appService.addSubscription(JSON.parse(subscription));
   }
 
   @Delete(ConfigData.NOTIFICATIONS_URL)

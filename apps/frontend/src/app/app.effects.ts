@@ -101,7 +101,7 @@ export class AppEffects {
       const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
       const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
       const userSub = { userId, subscriptions: [{ city, pushSubscription: payload.subscription }] };
-      return this.weatherService.addPushSubscriber(userSub).pipe(this.handleError);
+      return this.weatherService.addSubscription(userSub).pipe(this.handleError);
     }));
 
   @Effect({ dispatch: false })
@@ -111,7 +111,7 @@ export class AppEffects {
       // TODO refactor to take userId and cityId from storage and remove { dispatch: false }
       const userId = ServiceHelper.getLocalStorageItem(STORAGE.USER_ID);
       const city = ServiceHelper.getLocalStorageItem(STORAGE.CITY);
-      return this.weatherService.removePushSubscriber({ userId, cityId: city.id}).pipe(this.handleError);
+      return this.weatherService.removeSubscription({ userId, cityId: city.id}).pipe(this.handleError);
     }));
 
 

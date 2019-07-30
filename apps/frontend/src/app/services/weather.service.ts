@@ -17,13 +17,13 @@ export class WeatherService {
     return this.http.get<UserSubscriptions>(url);
   }
 
-  addPushSubscriber(sub: UserSubscriptions) {
-    return this.http.post(ConfigData.NOTIFICATIONS_URL, sub);
+  addSubscription(sub: UserSubscriptions): Observable<UserSubscriptions> {
+    return this.http.post<UserSubscriptions>(ConfigData.NOTIFICATIONS_URL, sub);
   }
 
-  removePushSubscriber(userAndCityIds: {userId: number, cityId: number}) {
+  removeSubscription(userAndCityIds: { userId: number, cityId: number }): Observable<UserSubscriptions> {
     const url = `${ConfigData.NOTIFICATIONS_URL}?&userId=${userAndCityIds.userId}&cityId=${userAndCityIds.cityId}`;
-    return this.http.delete(url);
+    return this.http.delete<UserSubscriptions>(url);
   }
 
   getCurrentWeatherByCityId(id: number): Observable<CurrentWeather> {

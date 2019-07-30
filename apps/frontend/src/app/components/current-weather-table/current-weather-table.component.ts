@@ -37,6 +37,9 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
           this.isSubscribed = userSubscriptions.subscriptions.some(sub => sub.city.id === selectedCity.id);
         }
       }));
+    this.swPush.messages.subscribe(messages => {
+      console.log(messages);
+    });
   }
 
   getTextWindDirection(deg: number) {
@@ -44,15 +47,13 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNotifications() {
-    if (!this.isSubscribed) {
-      this.swPush.requestSubscription({ serverPublicKey: ConfigData.VAPID_PUBLIC_KEY })
-        .then((subscription: PushSubscription) => this.store.dispatch(new NewUserSubscription({subscription})))
-        .catch(error => this.store.dispatch(new GotAnErrorDuringRequest({ error })));
-
+    if (this.isSubscribed) {
+      this.store.dispatch(new RemoveUserSubscription());
     } else {
-      this.store.dispatch(new RemoveUserSubscription())
+      this.swPush.requestSubscription({ serverPublicKey: ConfigData.VAPID_PUBLIC_KEY })
+        .then((subscription: PushSubscription) => this.store.dispatch(new NewUserSubscription({ subscription })))
+        .catch(error => this.store.dispatch(new GotAnErrorDuringRequest({ error })));
     }
-    this.isSubscribed = !this.isSubscribed;
   }
 
   ngOnDestroy(): void {

@@ -5,3 +5,5 @@
 Implement subscribing for the incoming perceptions during next 5 days
 https://blog.angular-university.io/angular-push-notifications/
 PWA (Push Notifications) based on Weather Alerts with Push notifications https://openweathermap.org/triggers ?
+
+- [BUG] Browser popup 'Show notifications' is shown randomly(maybe because of http mode)

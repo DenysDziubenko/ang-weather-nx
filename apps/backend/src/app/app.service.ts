@@ -72,6 +72,7 @@ export class AppService {
     webPush.sendNotification(pushSubscription, JSON.stringify(this.notificationPayload))
       .then(() => console.log(`Push Notification was sent for ${city.name}`))
       .catch(err => console.error('Error sending push notification, reason: ', err));
+    // TODO handle web push errors
   }
 
   private get5DayForecastByCityId(id: number): Observable<FiveDayWeather> {

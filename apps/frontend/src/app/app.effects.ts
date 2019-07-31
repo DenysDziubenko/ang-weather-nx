@@ -113,7 +113,7 @@ export class AppEffects {
     withLatestFrom(this.store.pipe(select(selectSelectedCityAndAllSubscriptions))),
     filter(([action, data]) => !!data[0]),
     mergeMap(([action, data]) => {
-      const city = data[0];
+      const city = (action.payload && action.payload.city) || data[0];
       const userId = data[1].userId;
       return this.weatherService.removeSubscription({ userId, cityId: city.id }).pipe(this.handleError);
     }),

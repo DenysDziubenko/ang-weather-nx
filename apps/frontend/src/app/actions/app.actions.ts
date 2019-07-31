@@ -84,6 +84,9 @@ export class NewUserSubscriptionRequested implements Action {
 
 export class RemoveUserSubscriptionRequested implements Action {
   readonly type = AppActionTypes.RemoveUserSubscriptionRequested;
+
+  constructor(public payload?: { city: City }) {
+  }
 }
 
 export class AllSubscriptionsRequested implements Action {

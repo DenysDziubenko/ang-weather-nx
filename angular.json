@@ -26,7 +26,9 @@
             "assets": [
               "apps/frontend/src/favicon.ico",
               "apps/frontend/src/assets",
-              "apps/frontend/src/manifest.json"
+              "apps/frontend/src/manifest.json",
+              "apps/frontend/src/sw-master.js",
+              "apps/frontend/src/sw-custom.js"
             ],
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",

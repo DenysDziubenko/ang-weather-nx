@@ -5,12 +5,12 @@ import { Observable, of, Subscription } from 'rxjs';
 import { bufferCount, debounceTime, distinctUntilChanged, map, skipWhile, switchMap } from 'rxjs/operators';
 import { Country } from './models/weather.models';
 import { selectedTrigger, showTrigger } from './helpers/animations';
-import { SwUpdate } from '@angular/service-worker';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 import { select, Store } from '@ngrx/store';
 import { State } from './reducers/app.reducers';
 import {
   AllCountriesRequested, AllSubscriptionsRequested,
-  CitiesByCountryRequested,
+  CitiesByCountryRequested, RemoveUserSubscriptionRequested,
   SearchCitiesRequested,
   SelectCity,
   SelectCountry
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private swUpdate: SwUpdate,
+    private swPush: SwPush,
     config: NgbModalConfig,
     private modalService: NgbModal,
     private store: Store<State>) {
@@ -54,6 +55,19 @@ export class AppComponent implements OnInit, OnDestroy {
       this.swUpdate.available.subscribe(() => {
         if (confirm('New version available. Updates to new version?')) {
           window.location.reload();
+        }
+      });
+    }
+
+    if (this.swPush.isEnabled) {
+      this.swPush.notificationClicks.subscribe(({ action, notification }) => {
+        if (action === 'explore') {
+          this.selectedCity = notification.data.city;
+          this.cityText = `${this.selectedCity.name}, ${this.selectedCity.country}`;
+
+          this.store.dispatch(new RemoveUserSubscriptionRequested({ city: this.selectedCity }));
+          this.store.dispatch(new SelectCity({ city: this.selectedCity }));
+          // TODO remove const forecastPeriod = notification.data.forecastPeriod;
         }
       });
     }

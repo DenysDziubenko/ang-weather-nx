@@ -28,7 +28,7 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
   currentWeather$: Observable<CurrentWeather>;
   subs: Subscription[] = [];
 
-  constructor(private store: Store<State>, private swPush: SwPush) {
+  constructor(private store: Store<State>, public swPush: SwPush) {
   }
 
   ngOnInit() {
@@ -41,10 +41,6 @@ export class CurrentWeatherTableComponent implements OnInit, OnDestroy {
           this.isSubscribed = userSubscriptions.subscriptions.some(sub => sub.city.id === selectedCity.id);
         }
       }));
-    this.swPush.messages.subscribe(messages => {
-      // TODO customize behavior
-      console.log(messages);
-    });
   }
 
   getTextWindDirection(deg: number) {

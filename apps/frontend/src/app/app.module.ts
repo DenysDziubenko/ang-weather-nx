@@ -45,7 +45,7 @@ import {CustomSerializer} from './helpers/utils';
     NgbModule,
     SharedModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    ServiceWorkerModule.register('/sw-master.js', {enabled: environment.production}),
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([AppEffects]),

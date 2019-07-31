@@ -17,6 +17,6 @@
   <app-five-day-forecast-table
     #table
     [isTableValueChanged]="isTableValueChanged"
-    [periods]="(forecast.list | periodFilter).values().next().value.periods">
+    [periods]="getSelectedPeriod(forecast.list | periodFilter)">
   </app-five-day-forecast-table>
 </div>

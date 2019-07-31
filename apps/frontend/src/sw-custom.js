@@ -5,9 +5,11 @@
     event.notification.close();
 
     const originUrl = event.target.location.origin;
+    const data = event.notification.data;
 
     if (clients.openWindow && originUrl) {
-      event.waitUntil(clients.openWindow(originUrl));
+      const params = `?cityId=${data.city.id}&day=${data.day}`;
+      event.waitUntil(clients.openWindow(`${originUrl}/fiveDayForecast${params}`));
     }
 
   });

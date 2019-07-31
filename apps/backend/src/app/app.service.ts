@@ -1,7 +1,14 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { interval, Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { City, ConfigData, FiveDayWeather, ForecastPeriod, UserSubscriptions } from '@ang-weather-nx/shared-data';
+import {
+  City,
+  ConfigData,
+  FiveDayWeather,
+  ForecastPeriod,
+  getWeekDay,
+  UserSubscriptions
+} from '@ang-weather-nx/shared-data';
 import * as webPush from 'web-push';
 
 @Injectable()
@@ -20,7 +27,7 @@ export class AppService {
         dateOfArrival: Date.now(),
         primaryKey: 1,
         city: {},
-        forecastPeriod : {}
+        day : ''
       },
       actions: [{
         action: 'explore',
@@ -63,11 +70,10 @@ export class AppService {
       weather.list.find(period => !!(period.snow && period.snow['3h'] || period.rain && period.rain['3h']));
 
   private sendNotifications(city: City, forecastPeriod: ForecastPeriod, pushSubscription) {
-
-    this.notificationPayload.notification.body =
-      `Found weather precipitations in ${city.name} for period ${new Date(forecastPeriod.dt * 1000)}`;
+    const day = getWeekDay(forecastPeriod.dt);
+    this.notificationPayload.notification.body = `Found weather precipitations in ${city.name} at ${day}`;
     this.notificationPayload.notification.data.city = city;
-    this.notificationPayload.notification.data.forecastPeriod = forecastPeriod;
+    this.notificationPayload.notification.data.day = day;
 
     webPush.sendNotification(pushSubscription, JSON.stringify(this.notificationPayload))
       .then(() => console.log(`Push Notification was sent for ${city.name}`))

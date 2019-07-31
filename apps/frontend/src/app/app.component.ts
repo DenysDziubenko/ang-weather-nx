@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { bufferCount, debounceTime, distinctUntilChanged, map, skipWhile, switchMap } from 'rxjs/operators';
 import { Country } from './models/weather.models';
@@ -15,7 +15,7 @@ import {
   SelectCity,
   SelectCountry
 } from './actions/app.actions';
-import { selectCities, selectCityNames, selectError } from './app.selectors';
+import { selectAllSubscriptions, selectCities, selectCityNames, selectError } from './app.selectors';
 import { City } from '@ang-weather-nx/shared-data';
 
 @Component({
@@ -40,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
   errorMessage: string;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private swUpdate: SwUpdate,
     private swPush: SwPush,
@@ -55,19 +56,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.swUpdate.available.subscribe(() => {
         if (confirm('New version available. Updates to new version?')) {
           window.location.reload();
-        }
-      });
-    }
-
-    if (this.swPush.isEnabled) {
-      this.swPush.notificationClicks.subscribe(({ action, notification }) => {
-        if (action === 'explore') {
-          this.selectedCity = notification.data.city;
-          this.cityText = `${this.selectedCity.name}, ${this.selectedCity.country}`;
-
-          this.store.dispatch(new RemoveUserSubscriptionRequested({ city: this.selectedCity }));
-          this.store.dispatch(new SelectCity({ city: this.selectedCity }));
-          // TODO remove const forecastPeriod = notification.data.forecastPeriod;
         }
       });
     }
@@ -114,6 +102,21 @@ export class AppComponent implements OnInit, OnDestroy {
           this.modalService.open(this.dialogElement, { centered: true });
         }
       }));
+
+    this.subs.push(
+      this.store.pipe(select(selectAllSubscriptions))
+        .subscribe(userSubs => {
+          const cityId = parseInt(this.route.snapshot.queryParams['cityId'], 10);
+          if (cityId && userSubs) {
+            const foundSub = userSubs.subscriptions.find(sub => sub.city.id === cityId);
+            if (foundSub) {
+              this.selectedCity = foundSub.city;
+              this.cityText = `${this.selectedCity.name}, ${this.selectedCity.country}`;
+              this.store.dispatch(new RemoveUserSubscriptionRequested({ city: this.selectedCity }));
+              this.store.dispatch(new SelectCity({ city: this.selectedCity }));
+            }
+          }
+        }));
   }
 
   ngOnDestroy(): void {

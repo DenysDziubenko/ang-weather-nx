@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { DaysKeyValue, DayValue } from '../../models/weather.models';
+import { DaysKeyValue, DaysMap, DayValue } from '../../models/weather.models';
 import { selectedTrigger, showTrigger } from '../../helpers/animations';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../reducers/app.reducers';
 import { FiveDayWeatherRequested } from '../../actions/app.actions';
 import { selectFiveDayWeather, selectSelectedCity } from '../../app.selectors';
-import { FiveDayWeather } from '@ang-weather-nx/shared-data';
+import { FiveDayWeather, ForecastPeriod } from '@ang-weather-nx/shared-data';
 
 @Component({
   selector: 'app-five-day-forecast',
@@ -60,4 +60,8 @@ export class FiveDayForecastComponent implements OnInit, OnDestroy {
   keyDescOrder = (a: DaysKeyValue, b: DaysKeyValue): number => {
     return a.value.periods[0].dt - b.value.periods[0].dt;
   };
+
+  getSelectedPeriod(days: DaysMap): ForecastPeriod[] {
+    return Array.from(days.values()).find(dayValue => dayValue.selected).periods;
+  }
 }

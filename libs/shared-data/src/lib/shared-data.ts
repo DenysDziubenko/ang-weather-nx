@@ -74,3 +74,9 @@ export class Precipitation {
   '1h': number;
   '3h': number;
 }
+
+export function getWeekDay(dt: number): string {
+  const date = new Date(dt * 1000);
+  const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return daysArr[date.getDay()];
+}

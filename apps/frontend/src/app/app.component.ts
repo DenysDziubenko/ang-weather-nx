@@ -9,8 +9,10 @@ import { SwPush, SwUpdate } from '@angular/service-worker';
 import { select, Store } from '@ngrx/store';
 import { State } from './reducers/app.reducers';
 import {
-  AllCountriesRequested, AllSubscriptionsRequested,
-  CitiesByCountryRequested, RemoveUserSubscriptionRequested,
+  AllCountriesRequested,
+  AllSubscriptionsRequested,
+  CitiesByCountryRequested,
+  RemoveUserSubscriptionRequested,
   SearchCitiesRequested,
   SelectCity,
   SelectCountry

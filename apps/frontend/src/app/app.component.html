@@ -26,9 +26,9 @@
           appScrollToCenter
           type="button"
           class="btn btn-outline-primary m-1"
-          [ngClass]="{'active': currentUrl === '/fiveDayForecast'}"
+          [ngClass]="{'active': currentUrl?.includes('/fiveDayForecast')}"
           *ngIf="selectedCity"
-          [@selectedState]="currentUrl === '/fiveDayForecast' ? 'selected' : 'default'"
+          [@selectedState]="currentUrl?.includes('/fiveDayForecast') ? 'selected' : 'default'"
           (click)="show5dayForecast()">
           5 day forecast
         </button>

@@ -17,14 +17,12 @@ export class AppService {
   // TODO save, retrieve subscriptions in DB
   private userSubscriptions: UserSubscriptions[] = [];
   private pollSubscriptions: Subscription[] = [];
-  // private period = 3 * 60 * 60 * 1000; // every 3 hour
-  private period = 30 * 1000; // every 30 seconds
+  private period = 3 * 60 * 60 * 1000; // every 3 hour
   private notificationPayload = {
     notification: {
       title: 'Weather News',
       body: 'Weather Precipitations',
       icon: 'assets/icons/icon-72x72.png',
-      // badge: 'assets/icons/icon-128x128.png',
       tag: '',
       vibrate: [100, 50, 100],
       data: {
@@ -81,7 +79,6 @@ export class AppService {
     webPush.sendNotification(pushSubscription, JSON.stringify(this.notificationPayload))
       .then(() => console.log(`Push Notification was sent for ${city.name}`))
       .catch(err => console.error('Error sending push notification, reason: ', err));
-    // TODO handle web push errors
   }
 
   private get5DayForecastByCityId(id: number): Observable<FiveDayWeather> {

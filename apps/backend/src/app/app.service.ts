@@ -24,7 +24,7 @@ export class AppService {
       title: 'Weather News',
       body: 'Weather Precipitations',
       icon: 'assets/icons/icon-72x72.png',
-      badge: 'assets/icons/icon-128x128.png',
+      // badge: 'assets/icons/icon-128x128.png',
       tag: '',
       vibrate: [100, 50, 100],
       data: {

@@ -17,6 +17,7 @@ export class AppService {
   // TODO save, retrieve subscriptions in DB
   private userSubscriptions: UserSubscriptions[] = [];
   private pollSubscriptions: Subscription[] = [];
+  private period = 3 * 60 * 60 * 1000; // every 3 hour
   private notificationPayload = {
     notification: {
       title: 'Weather News',
@@ -51,9 +52,11 @@ export class AppService {
 
     if (allSubscriptions.length) {
       allSubscriptions.forEach(sub => {
-        this.pollSubscriptions.push(interval(15000)
+        this.pollSubscriptions.push(interval(this.period)
           .pipe(switchMap(() => this.get5DayForecastByCityId(sub.city.id)))
           .subscribe(weather => {
+            const d = new Date();
+            console.log(`Got a weather at time - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`);
             const forecastPeriod = this.searchPrecipitations(weather);
             if (forecastPeriod) {
               this.sendNotifications(weather.city, forecastPeriod, sub.pushSubscription);

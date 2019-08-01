@@ -71,6 +71,18 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
+    if (this.swPush.isEnabled) {
+      this.swPush.notificationClicks.subscribe(({ action, notification }) => {
+        if (action === 'explore') {
+          this.selectedCity = notification.data.city;
+          this.cityText = `${this.selectedCity.name}, ${this.selectedCity.country}`;
+
+          this.store.dispatch(new RemoveUserSubscriptionRequested({ city: this.selectedCity }));
+          this.store.dispatch(new SelectCity({ city: this.selectedCity }));
+        }
+      });
+    }
+
     this.subs.push(this.store.subscribe(state => {
       const { selectedCity, allCountries, cities } = state.appState;
       this.allCountries = allCountries;

@@ -16,18 +16,20 @@ export class AppService {
 
   // TODO save, retrieve subscriptions in DB
   private userSubscriptions: UserSubscriptions[] = [];
-  private subscriptions: Subscription[] = [];
+  private pollSubscriptions: Subscription[] = [];
   private notificationPayload = {
     notification: {
       title: 'Weather News',
       body: 'Weather Precipitations',
       icon: 'assets/icons/icon-72x72.png',
+      badge: 'assets/icons/icon-128x128.png',
+      tag: '',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
         city: {},
-        day : ''
+        day: ''
       },
       actions: [{
         action: 'explore',
@@ -44,11 +46,12 @@ export class AppService {
   }
 
   private setWeatherPolling() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.pollSubscriptions.forEach(sub => sub.unsubscribe());
+    const allSubscriptions = this.userSubscriptions.reduce((arr, userSub) => [...arr, ...userSub.subscriptions], []);
 
-    this.userSubscriptions.forEach(userSub => {
-      userSub.subscriptions.forEach(sub => {
-        this.subscriptions.push(interval(15000)
+    if (allSubscriptions.length) {
+      allSubscriptions.forEach(sub => {
+        this.pollSubscriptions.push(interval(15000)
           .pipe(switchMap(() => this.get5DayForecastByCityId(sub.city.id)))
           .subscribe(weather => {
             const forecastPeriod = this.searchPrecipitations(weather);
@@ -57,7 +60,7 @@ export class AppService {
             }
           }));
       });
-    });
+    }
   }
 
   private searchPrecipitations =
@@ -66,6 +69,7 @@ export class AppService {
 
   private sendNotifications(city: City, forecastPeriod: ForecastPeriod, pushSubscription) {
     const day = getWeekDay(forecastPeriod.dt);
+    this.notificationPayload.notification.tag = day;
     this.notificationPayload.notification.body = `Found weather precipitations in ${city.name} at ${day}`;
     this.notificationPayload.notification.data.city = city;
     this.notificationPayload.notification.data.day = day;
@@ -87,7 +91,7 @@ export class AppService {
 
   getSubscriptions(userId: number): UserSubscriptions {
     const userSub = this.findUserSubscription(userId);
-    return userSub ? userSub : {userId, subscriptions: []};
+    return userSub ? userSub : { userId, subscriptions: [] };
   }
 
   addSubscription(userSubscription: UserSubscriptions): UserSubscriptions {

@@ -13,8 +13,11 @@ export enum STORAGE {
   providedIn: 'root'
 })
 export class ServiceHelper {
-  static HTTP_OPTIONS = {
+  static HTTP_OPTIONS_TEXT_PLAIN = {
     headers: new HttpHeaders().set('Content-Type', 'text/plain')
+  };
+  static HTTP_OPTIONS_APP_JSON = {
+    headers: new HttpHeaders().set('Content-Type', 'application/json')
   };
 
   spinner$: BehaviorSubject<boolean> = new BehaviorSubject(true);

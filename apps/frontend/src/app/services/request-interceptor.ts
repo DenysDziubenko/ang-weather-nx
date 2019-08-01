@@ -3,6 +3,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from
 import {catchError, tap} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
 import {ServiceHelper} from './services-helper';
+import { ConfigData } from '@ang-weather-nx/shared-data';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,9 @@ export class RequestInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isRequestSilent = !!req.params.get('silent');
-    const customReq = req.clone(ServiceHelper.HTTP_OPTIONS);
+    const customReq = req.clone(
+      req.url.includes(ConfigData.SUBSCRIPTIONS_URL) ?
+        ServiceHelper.HTTP_OPTIONS_APP_JSON : ServiceHelper.HTTP_OPTIONS_TEXT_PLAIN);
 
     this.sh.spinner$.next(isRequestSilent);
 

@@ -1,6 +1,3 @@
-
-- Return an index.html when accessing the "/"
-
 - [DONE partially] PWA
 Implement subscribing for the incoming perceptions during next 5 days
 https://blog.angular-university.io/angular-push-notifications/

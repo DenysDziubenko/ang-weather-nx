@@ -37,15 +37,10 @@ export class AppService {
   };
 
   constructor(private hs: HttpService) {
-    webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, ConfigData.VAPID_PRIVAT_KEY);
+    webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, ConfigData.VAPID_PRIVATE_KEY);
     if (this.userSubscriptions.length) {
       this.setWeatherPolling();
     }
-  }
-
-  getData(): { message: string } {
-    // TODO update to return index.html
-    return ({ message: 'Welcome to backend!' });
   }
 
   private setWeatherPolling() {

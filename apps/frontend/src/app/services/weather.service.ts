@@ -13,16 +13,16 @@ export class WeatherService {
   }
 
   getSubscriptions(userId: number): Observable<UserSubscriptions> {
-    const url = `${ConfigData.NOTIFICATIONS_URL}?&userId=${userId}`;
+    const url = `${ConfigData.SUBSCRIPTIONS_URL}?&userId=${userId}`;
     return this.http.get<UserSubscriptions>(url);
   }
 
   addSubscription(sub: UserSubscriptions): Observable<UserSubscriptions> {
-    return this.http.post<UserSubscriptions>(ConfigData.NOTIFICATIONS_URL, sub);
+    return this.http.post<UserSubscriptions>(ConfigData.SUBSCRIPTIONS_URL, sub);
   }
 
   removeSubscription(userAndCityIds: { userId: number, cityId: number }): Observable<UserSubscriptions> {
-    const url = `${ConfigData.NOTIFICATIONS_URL}?&userId=${userAndCityIds.userId}&cityId=${userAndCityIds.cityId}`;
+    const url = `${ConfigData.SUBSCRIPTIONS_URL}?&userId=${userAndCityIds.userId}&cityId=${userAndCityIds.cityId}`;
     return this.http.delete<UserSubscriptions>(url);
   }
 

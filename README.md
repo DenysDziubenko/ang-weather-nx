@@ -1,5 +1,9 @@
 # AngWeatherNx
 
+Simple PWA application based on Angular with Nx and NgRx.
+
+### [Website live example](https://ang-weather-pwa.herokuapp.com/)
+
 This project was generated using [Nx](https://nx.dev).
 
 <p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png" width="450"></p>

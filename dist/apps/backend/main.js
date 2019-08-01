@@ -540,7 +540,7 @@ function bootstrap() {
         const app = yield _nestjs_core__WEBPACK_IMPORTED_MODULE_1__["NestFactory"].create(_app_app_module__WEBPACK_IMPORTED_MODULE_2__[/* AppModule */ "a"]);
         app.use(morgan__WEBPACK_IMPORTED_MODULE_3__('dev'));
         app.enableCors();
-        const port = process.env.port || 3333;
+        const port = process.env.PORT || 3333;
         yield app.listen(port, () => {
             console.log('Listening at http://localhost:' + port + '/api');
         });

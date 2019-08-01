@@ -1,6 +1,6 @@
 # AngWeatherNx
 
-Simple PWA application based on Angular with Nx and NgRx.
+Simple PWA app with Web Push Notifications based on Nx and Angular with NgRx.
 
 ### [Website live example](https://ang-weather-pwa.herokuapp.com/)
 

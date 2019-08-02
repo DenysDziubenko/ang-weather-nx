@@ -17,7 +17,8 @@ export class AppService {
   // TODO save, retrieve subscriptions in DB
   private userSubscriptions: UserSubscriptions[] = [];
   private pollSubscriptions: Subscription[] = [];
-  private period = 3 * 60 * 60 * 1000; // every 3 hour
+  // private period = 3 * 60 * 60 * 1000; // every 3 hour
+  private period = 10 * 60 * 1000; // every 10 minute
   private notificationPayload = {
     notification: {
       title: 'Weather News',

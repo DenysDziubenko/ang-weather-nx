@@ -5,7 +5,6 @@ export class ConfigData {
   static OPENWEATHERMAP_APPID = '547e48458270f5cd9a271cb7e1cdec51';
   static OPENWEATHERMAP_URL = 'https://api.openweathermap.org/data/2.5/';
   static VAPID_PUBLIC_KEY = 'BI3NVkrJAjjR1mFI408NCYtT-SnJ2KZrk5brxtRBySxrqoy_nIi4Ly1jnyB0YfYLXoF8QaEpYvZKO7eDJn-TA1M';
-  static VAPID_PRIVATE_KEY = 'lzExeQb_2BdOGdyvxsBYXp1gxqfzCxVHmQit91GGFr8';
 }
 
 export class UserSubscriptions {

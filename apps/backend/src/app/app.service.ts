@@ -76,7 +76,8 @@ export class AppService {
           .pipe(switchMap(() => this.get5DayForecastByCityId(sub.city.id)))
           .subscribe(weather => {
             const d = new Date();
-            console.log(`Got a weather at time - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`);
+            const cityName = weather.city.name;
+            console.log(`Got a weather at time - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()} for city - ${cityName}`);
             const forecastPeriod = this.searchPrecipitations(weather);
             if (forecastPeriod) {
               this.sendNotifications(weather.city, forecastPeriod, sub.pushSubscription);
@@ -98,7 +99,7 @@ export class AppService {
     this.notificationPayload.notification.data.day = day;
 
     webPush.sendNotification(pushSubscription, JSON.stringify(this.notificationPayload))
-      .then(() => console.log(`Push Notification was sent for ${city.name}`))
+      .then(() => console.log(`Push Notification was sent, city - ${city.name}, day - ${day}, time period - ${forecastPeriod.dt}`))
       .catch(err => console.error('Error sending push notification, reason: ', err));
   }
 

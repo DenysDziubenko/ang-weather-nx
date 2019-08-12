@@ -13,6 +13,7 @@ export class PeriodFilterPipe implements PipeTransform {
 
   transform(periods: ForecastPeriod[]): DaysMap {
     const day = this.route.snapshot.queryParams['day'];
+    let isSomeDaySelected = false;
     const days: DaysMap = new Map();
     periods.forEach((period, i) => {
       const weekDay = getWeekDay(period.dt);
@@ -21,9 +22,19 @@ export class PeriodFilterPipe implements PipeTransform {
         days.get(weekDay).periods.push(period);
       } else {
         const selected = day ? weekDay === day.trim() : i === 0;
+
+        if (!isSomeDaySelected) {
+          isSomeDaySelected = selected;
+        }
+
         days.set(weekDay, { selected, periods: [period] });
       }
     });
+
+    if (!isSomeDaySelected) {
+      days.values().next().value.selected = true;
+    }
+
     return days;
   }
 }

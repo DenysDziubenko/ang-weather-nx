@@ -17,7 +17,9 @@
     "baseUrl": ".",
     "paths": {
       "@ang-weather-nx/shared-data": ["libs/shared-data/src/index.ts"]
-    }
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "tmp"]
 }

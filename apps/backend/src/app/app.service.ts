@@ -10,15 +10,22 @@ import {
   UserSubscriptions
 } from '@ang-weather-nx/shared-data';
 import * as webPush from 'web-push';
+import * as admin from 'firebase-admin';
+import * as serviceAccount from './../assets/weather-app-6e386-17b01da50c3e.json';
 
 @Injectable()
 export class AppService {
-
-  // TODO save, retrieve subscriptions in DB
+  private serviceAccountObj = {
+    projectId: serviceAccount.project_id,
+    privateKey: serviceAccount.private_key,
+    clientEmail: serviceAccount.client_email
+  };
+  private db: admin.firestore.Firestore;
+  private userSubRefs;
   private userSubscriptions: UserSubscriptions[] = [];
   private pollSubscriptions: Subscription[] = [];
   // private period = 3 * 60 * 60 * 1000; // every 3 hour
-  private period = 10 * 60 * 1000; // every 10 minute
+  private period = 30 * 60 * 1000; // every 30 minute
   private notificationPayload = {
     notification: {
       title: 'Weather News',
@@ -41,9 +48,22 @@ export class AppService {
 
   constructor(private hs: HttpService) {
     webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, ConfigData.VAPID_PRIVATE_KEY);
-    if (this.userSubscriptions.length) {
-      this.setWeatherPolling();
-    }
+    admin.initializeApp({ credential: admin.credential.cert(this.serviceAccountObj) });
+    this.db = admin.firestore();
+    this.userSubRefs = this.db.collection('userSubscriptions');
+    this.userSubRefs.get().then(snapshot => {
+      snapshot.forEach(doc => this.userSubscriptions.push(
+        {
+          userId: parseInt(doc.id, 10),
+          subscriptions: doc.data().subscriptions
+        }));
+      if (this.userSubscriptions.length) {
+        this.setWeatherPolling();
+      }
+
+    }).catch((err) => {
+      console.log('Error getting users subscriptions - ', err);
+    });
   }
 
   private setWeatherPolling() {
@@ -104,8 +124,11 @@ export class AppService {
     } else {
       this.userSubscriptions.push(userSubscription);
     }
+
+    const updatedUserSub = this.findUserSubscription(userSubscription.userId);
+    this.userSubRefs.doc(`${userSubscription.userId}`).set({ subscriptions: updatedUserSub.subscriptions });
     this.setWeatherPolling();
-    return this.findUserSubscription(userSubscription.userId);
+    return updatedUserSub;
   }
 
   deleteSubscription(userId: number, cityId: number): UserSubscriptions {
@@ -113,8 +136,9 @@ export class AppService {
 
     if (userSub) {
       userSub.subscriptions = userSub.subscriptions.filter(sub => sub.city.id !== cityId);
+      this.userSubRefs.doc(`${userSub.userId}`).set({ subscriptions: userSub.subscriptions });
+      this.setWeatherPolling();
     }
-    this.setWeatherPolling();
 
     return userSub;
   }

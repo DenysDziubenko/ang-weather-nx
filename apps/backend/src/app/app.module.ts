@@ -4,10 +4,9 @@ import { AppService } from './app.service';
 import { APP_PIPE } from '@nestjs/core';
 import { DataPipe } from '../util/data.pipe';
 import { FrontendMiddleware } from './frontend.middleware';
-import { ConfigModule } from './app.config-module';
 
 @Module({
-  imports: [HttpModule, ConfigModule],
+  imports: [HttpModule],
   controllers: [AppController],
   providers: [
     AppService,

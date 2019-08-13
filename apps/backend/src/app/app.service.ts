@@ -11,10 +11,15 @@ import {
 } from '@ang-weather-nx/shared-data';
 import * as webPush from 'web-push';
 import * as admin from 'firebase-admin';
-import { ConfigService } from './app.config-service';
+import * as serviceAccount from './../assets/weather-app-6e386-29c839435456.json';
 
 @Injectable()
 export class AppService {
+  private serviceAccountObj = {
+    projectId: serviceAccount.project_id,
+    privateKey: serviceAccount.private_key,
+    clientEmail: serviceAccount.client_email
+  };
   private db: admin.firestore.Firestore;
   private userSubRefs;
   private userSubscriptions: UserSubscriptions[] = [];
@@ -41,15 +46,9 @@ export class AppService {
     }
   };
 
-  constructor(
-    private hs: HttpService,
-    config: ConfigService) {
-    webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, config.get('VAPID_PRIVATE_KEY'));
-    admin.initializeApp({ credential: admin.credential.cert({
-        projectId: "weather-app-6e386",
-        privateKey: config.get('PRIVATE_KEY'),
-        clientEmail: config.get('CLIENT_EMAIL')
-      }) });
+  constructor(private hs: HttpService) {
+    webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, ConfigData.VAPID_PRIVATE_KEY);
+    admin.initializeApp({ credential: admin.credential.cert(this.serviceAccountObj) });
     this.db = admin.firestore();
     this.userSubRefs = this.db.collection('userSubscriptions');
     this.userSubRefs.get().then(snapshot => {

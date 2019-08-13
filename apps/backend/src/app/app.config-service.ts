@@ -6,7 +6,11 @@ export class ConfigService {
 
   constructor(filePath: string) {
     if (process.env.NODE_ENV === 'production') {
-      this.envConfig = process.env;
+      this.envConfig = {
+        PRIVATE_KEY: process.env.PRIVATE_KEY,
+        CLIENT_EMAIL: process.env.CLIENT_EMAIL,
+        VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY
+      };
 
     } else {
       this.envConfig = dotenv.parse(fs.readFileSync(filePath));

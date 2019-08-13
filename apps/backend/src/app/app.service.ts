@@ -47,7 +47,7 @@ export class AppService {
     webPush.setVapidDetails('mailto:example@yourdomain.org', ConfigData.VAPID_PUBLIC_KEY, config.get('VAPID_PRIVATE_KEY'));
     admin.initializeApp({ credential: admin.credential.cert({
         projectId: "weather-app-6e386",
-        privateKey: config.get('PRIVATE_KEY'),
+        privateKey: config.get('PRIVATE_KEY').replace(/\\n/g, '\n'),
         clientEmail: config.get('CLIENT_EMAIL')
       }) });
     this.db = admin.firestore();

@@ -14,6 +14,10 @@ export class ConfigService {
   }
 
   get(key: string): string {
+    console.log('***');
+    console.log('key - ', key);
+    console.log('value - ', this.envConfig[key]);
+    console.log('***');
     return this.envConfig[key];
   }
 }
